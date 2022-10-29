@@ -92,7 +92,9 @@ router.get(
 
       const copy = await new Lists().createList({
         name: list.name,
-        items: { connect: list.items },
+        items: {
+          connect: list.items.map((item) => ({ id: item.id })),
+        },
       });
 
       return res
