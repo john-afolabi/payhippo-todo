@@ -75,6 +75,35 @@ router.get(
   },
 );
 
+router.get(
+  '/:id/copy',
+  validate,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const {
+        params: { id },
+      } = req;
+
+      const list = await new Lists(id).getListWithItems();
+
+      if (!list) {
+        throw createError('List not found', 404);
+      }
+
+      const copy = await new Lists().createList({
+        name: list.name,
+        items: { connect: list.items },
+      });
+
+      return res
+        .status(200)
+        .json(success('List duplicated successfully', copy));
+    } catch (e) {
+      return next(e);
+    }
+  },
+);
+
 router.delete(
   '/:id',
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
