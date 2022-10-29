@@ -19,7 +19,7 @@ router.post(
         query: { listId },
       } = req;
 
-      const item = await new Items(null, listId as string).createItem({
+      const item = await new Items('', listId as string).createItem({
         description,
         isCompleted: false,
       });
@@ -39,7 +39,7 @@ router.get(
         query: { listId },
       } = req;
 
-      const items = await new Items(null, listId as string).getItemsInList();
+      const items = await new Items('', listId as string).getItemsInList();
 
       return res
         .status(200)
@@ -51,16 +51,45 @@ router.get(
 );
 
 router.get(
-  '/id',
+  '/:id',
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const {
         params: { id },
       } = req;
 
-      const item = await new Items(id, null).getItem();
+      const item = await new Items(id, '').getItem();
 
       return res.status(200).json(success('Item retrieved successfully', item));
+    } catch (e) {
+      return next(e);
+    }
+  },
+);
+
+router.get(
+  '/:id/copy',
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const {
+        params: { id },
+      } = req;
+
+      const item = await new Items(id, '').getItemWithLists();
+
+      if (!item) {
+        throw createError('Item not found', 404);
+      }
+
+      const copy = await new Items().createItem({
+        description: item.description,
+        isCompleted: item.isCompleted,
+        lists: {
+          connect: item.lists,
+        },
+      });
+
+      return res.status(200).json(success('Item copied successfully', copy));
     } catch (e) {
       return next(e);
     }
@@ -78,7 +107,7 @@ router.put(
         params: { id },
       } = req;
 
-      const item = await new Items(id, null).updateItem({
+      const item = await new Items(id, '').updateItem({
         description,
         isCompleted,
       });
@@ -98,7 +127,7 @@ router.delete(
         params: { id },
       } = req;
 
-      const deleted = await new Items(id, null).deleteItem().catch((e) => {
+      const deleted = await new Items(id, '').deleteItem().catch((e) => {
         throw e;
       });
 
@@ -112,41 +141,5 @@ router.delete(
     }
   },
 );
-
-// router.get(
-//   '/:id',
-//   validate,
-//   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-//     try {
-//       const {
-//         params: { id },
-//       } = req;
-
-//       const list = await new Lists(id).getList();
-//       return res.status(200).json(success('List retrieved successfully', list));
-//     } catch (e) {
-//       return next(e);
-//     }
-//   },
-// );
-
-// router.get(
-//   '/:id/items',
-//   validate,
-//   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-//     try {
-//       const {
-//         params: { id },
-//       } = req;
-
-//       const listWithItems = await new Lists(id).getListWithItems();
-//       return res
-//         .status(200)
-//         .json(success('List with items retrieved successfully', listWithItems));
-//     } catch (e) {
-//       return next(e);
-//     }
-//   },
-// );
 
 export default router;
