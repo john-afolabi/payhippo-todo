@@ -94,6 +94,25 @@ router.get(
   },
 );
 
+router.get(
+  '/:id/lists',
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const {
+        params: { id },
+      } = req;
+
+      const items = await new Items(id, '').getItemWithLists();
+
+      return res
+        .status(200)
+        .json(success('Item with lists retrieved successfully', items));
+    } catch (e) {
+      return next(e);
+    }
+  },
+);
+
 router.put(
   '/:id',
   updateItem(),

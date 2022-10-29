@@ -290,4 +290,50 @@ export default {
       ],
     },
   },
+  '/v1/items/{id}/lists': {
+    get: {
+      tags: ['Items'],
+      summary: 'Retrieve item with lists',
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: string,
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Successful',
+          schema: {
+            type: 'object',
+            properties: {
+              status: boolean,
+              message: string,
+              data: {
+                type: 'array',
+                items: { $ref: '#/definitions/Item' },
+              },
+            },
+          },
+        },
+        400: {
+          description: 'Failed',
+          schema: {
+            type: 'object',
+            properties: {
+              status: booleanFalse,
+              message: string,
+              data: null,
+            },
+          },
+        },
+      },
+      security: [
+        {
+          Bearer: [],
+        },
+      ],
+    },
+  },
 };
