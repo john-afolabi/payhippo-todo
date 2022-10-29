@@ -143,6 +143,17 @@ export default {
           required: true,
           schema: string,
         },
+        {
+          name: 'body',
+          in: 'body',
+          required: true,
+          schema: {
+            type: 'object',
+            properties: {
+              name: string,
+            },
+          },
+        },
       ],
       responses: {
         200: {
@@ -196,6 +207,51 @@ export default {
               status: boolean,
               message: string,
               data: boolean,
+            },
+          },
+        },
+        400: {
+          description: 'Failed',
+          schema: {
+            type: 'object',
+            properties: {
+              status: booleanFalse,
+              message: string,
+              data: null,
+            },
+          },
+        },
+      },
+      security: [
+        {
+          Bearer: [],
+        },
+      ],
+    },
+  },
+  '/v1/lists/{id}/copy': {
+    get: {
+      tags: ['Lists'],
+      summary: 'Duplicate a list with items',
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: string,
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Successful',
+          schema: {
+            type: 'object',
+            properties: {
+              status: boolean,
+              message: string,
+              data: {
+                $ref: '#/definitions/List',
+              },
             },
           },
         },
