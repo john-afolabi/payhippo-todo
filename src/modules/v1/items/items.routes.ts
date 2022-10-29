@@ -19,7 +19,7 @@ router.post(
         query: { listId },
       } = req;
 
-      const item = await new Items('', listId as string).createItem({
+      const item = await new Items('', listId as string).createItemInList({
         description,
         isCompleted: false,
       });
@@ -81,12 +81,10 @@ router.get(
         throw createError('Item not found', 404);
       }
 
-      const copy = await new Items().createItem({
+      const copy = await new Items().createItemInLists({
         description: item.description,
         isCompleted: item.isCompleted,
-        lists: {
-          connect: item.lists,
-        },
+        listIds: item.lists.map((list) => list.id),
       });
 
       return res.status(200).json(success('Item copied successfully', copy));

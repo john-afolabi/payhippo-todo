@@ -21,7 +21,7 @@ export default class ItemsService {
     this.listId = listId;
   }
 
-  public async createItem(params: Prisma.ItemCreateInput) {
+  public async createItemInList(params: Prisma.ItemCreateInput) {
     const item = await this.model.create({
       data: {
         ...params,
@@ -30,6 +30,22 @@ export default class ItemsService {
         },
       },
       select: { ...returningData },
+    });
+
+    return item;
+  }
+
+  public async createItemInLists(
+    params: Prisma.ItemCreateInput & { listIds: string[] },
+  ) {
+    const { listIds, ...rest } = params;
+    const item = await this.model.create({
+      data: {
+        ...rest,
+        lists: {
+          connect: listIds.map((id) => ({ id })),
+        },
+      },
     });
 
     return item;
