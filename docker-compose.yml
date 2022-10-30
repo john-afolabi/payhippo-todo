@@ -1,11 +1,28 @@
-version: '3.8'
+version: '3.9'
 services:
+  # These are the configurations for our Node app
+  # When Docker Compose starts this container it will automatically
+  # use the Dockerfile in the directory to configure it
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    command: npm run start
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres/todo
+      - NODE_ENV=production
   postgres:
     image: postgres:13
     restart: always
     environment:
-      - POSTGRES_USER=payhippo
-      - POSTGRES_PASSWORD=payhippo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=todo    
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
