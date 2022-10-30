@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 interface IConfig {
-  port: number;
   url?: string;
+  port: number;
   isProduction: boolean;
   isDevelopment: boolean;
   isTestEnvironment: boolean;
@@ -34,6 +34,7 @@ export const initConfig = (): IConfig => {
         isDevelopment: false,
         isTestEnvironment: true,
         port: Number(PORT) || 4000,
+        url: BACKEND_URL,
       };
     default:
       return {
@@ -41,6 +42,7 @@ export const initConfig = (): IConfig => {
         isDevelopment: true,
         isTestEnvironment: false,
         port: Number(PORT) || 3001,
+        url: BACKEND_URL,
       };
   }
 };

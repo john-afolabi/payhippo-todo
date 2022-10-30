@@ -10,7 +10,7 @@ const doc = {
     title: 'Payhippo TODO List service API',
     description: 'An Application to manage todo lists',
   },
-  host: config.url || `localhost:${config.port}`,
+  host: config.url,
   basePath: '/',
   tags: [
     // Add tags here
