@@ -25,11 +25,7 @@ const apiLimiter = rateLimit({
 app.use(helmet());
 app.use(compression());
 const morganConfig = !config.isProduction ? 'dev' : 'tiny';
-app.use(
-  morgan(morganConfig, {
-    skip: (req: Request) => !req.url.startsWith('/docs'),
-  }),
-);
+app.use(morgan(morganConfig));
 
 app.use(
   cors({
