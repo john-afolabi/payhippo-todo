@@ -11,8 +11,10 @@
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"moduleResolution": "node",
+		"strictNullChecks": true,
 		"lib": ["dom", "dom.iterable", "esnext"],
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"types": ["jest"]
 	},
 	"ts-node": {
 		"esm": true,
