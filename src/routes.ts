@@ -8,6 +8,8 @@ const router = Router();
 
 // SWAGGER DOCS
 router.use('/docs', swaggerUI.serve, swaggerUI.setup(doc));
+
+// v1 Route
 router.use('/v1', v1);
 
 router.use((req: Request, res: Response, _next: NextFunction) => {

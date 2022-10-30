@@ -1,7 +1,7 @@
-FROM node:16-alpine3.15 as build
+FROM node:16-alpine3.15 as base
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
@@ -14,7 +14,7 @@ RUN npm install
 
 COPY . .
 
-FROM build as prod
+FROM base as prod
 
 RUN npx prisma generate
 
