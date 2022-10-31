@@ -52,9 +52,13 @@ export default class ItemsService {
   }
 
   public async getItem() {
-    const item = await this.model.findUnique({
-      where: { id: this.id },
-    });
+    const item = await this.model
+      .findUnique({
+        where: { id: this.id },
+      })
+      .catch((e) => {
+        throw e;
+      });
 
     return item;
   }

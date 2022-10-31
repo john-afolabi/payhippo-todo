@@ -60,6 +60,10 @@ router.get(
 
       const item = await new Items(id, '').getItem();
 
+      if (!item) {
+        throw createError('Item not found', 404);
+      }
+
       return res.status(200).json(success('Item retrieved successfully', item));
     } catch (e) {
       return next(e);
@@ -102,11 +106,15 @@ router.get(
         params: { id },
       } = req;
 
-      const items = await new Items(id, '').getItemWithLists();
+      const item = await new Items(id, '').getItemWithLists();
+
+      if (!item) {
+        throw createError('Item not found', 404);
+      }
 
       return res
         .status(200)
-        .json(success('Item with lists retrieved successfully', items));
+        .json(success('Item with lists retrieved successfully', item));
     } catch (e) {
       return next(e);
     }
@@ -124,10 +132,14 @@ router.put(
         params: { id },
       } = req;
 
-      const item = await new Items(id, '').updateItem({
-        description,
-        isCompleted,
-      });
+      const item = await new Items(id, '')
+        .updateItem({
+          description,
+          isCompleted,
+        })
+        .catch((e) => {
+          throw e;
+        });
 
       return res.status(200).json(success('Item updated successfully', item));
     } catch (e) {

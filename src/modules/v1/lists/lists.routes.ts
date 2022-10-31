@@ -50,7 +50,10 @@ router.put(
         params: { id },
       } = req;
 
-      const list = await new Lists(id).updateList({ name });
+      const list = await new Lists(id).updateList({ name }).catch((e) => {
+        throw e;
+      });
+
       return res.status(200).json(success('List updated successfully', list));
     } catch (e) {
       return next(e);
@@ -68,6 +71,11 @@ router.get(
       } = req;
 
       const list = await new Lists(id).getList();
+
+      if (!list) {
+        throw createError('List not found', 404);
+      }
+
       return res.status(200).json(success('List retrieved successfully', list));
     } catch (e) {
       return next(e);
@@ -139,6 +147,11 @@ router.get(
       } = req;
 
       const listWithItems = await new Lists(id).getListWithItems();
+
+      if (!listWithItems) {
+        throw createError('List not found', 404);
+      }
+
       return res
         .status(200)
         .json(success('List with items retrieved successfully', listWithItems));
